@@ -1,0 +1,68 @@
+@startuml
+left to right direction
+
+' Definição dos Atores
+actor "Usuario" as U
+actor "Colaborador" as Colab
+actor "Gestor RH" as GRH
+actor "Gestor Setorial" as GS
+actor "Diretor Executivo" as DE
+actor "Suporte TI" as STI
+
+' Herança (Generalização) dos atores
+Colab --|> U
+GRH --|> U
+GS --|> U
+DE --|> U
+STI --|> U
+
+' Fronteira do Sistema
+rectangle "Casos de Uso: HRO/ALVF" {
+    
+    usecase "Acessar ao Sistema" as UC1
+    usecase "Responder Pesquisa" as UC2
+    
+    usecase "Planejar Campanha" as UC3
+    usecase "Criar Recursos para\nColetar Dados" as UC4
+    
+    usecase "Consolidar Resultados" as UC5
+    usecase "Visualizar Tasa de\nParticipación" as UC6
+    
+    usecase "Monitorar Plano de Ação" as UC7
+    
+    usecase "Consultar Painel por Área" as UC9
+    usecase "Criar Plano de Ação" as UC8
+    usecase "Exportar Dados" as UC10
+    
+    usecase "Auditar Acessos e\nPermissões" as UC11
+    usecase "Tratar Exceções e\nIncidentes" as UC12
+
+    ' Relações de Include e Extend
+    UC3 .> UC4 : <<include>>
+    UC5 .> UC6 : <<extends>>
+    UC9 .> UC10 : <<extends>>
+    UC8 .up.> UC7 : <<extends>>
+}
+
+' Associações entre Atores e Casos de Uso
+U --> UC1
+Colab --> UC2
+
+GRH --> UC3
+GRH --> UC5
+GRH --> UC7
+
+GS --> UC9
+GS --> UC8
+
+' Conexão do Diretor Executivo com a nota no enlace
+DE --> UC9
+note on link
+  Evolução temporal e
+  visão global
+end note
+
+STI --> UC11
+STI --> UC12
+
+@enduml
