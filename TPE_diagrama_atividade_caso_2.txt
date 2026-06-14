@@ -1,0 +1,55 @@
+@startuml
+' Título do diagrama
+title Diagrama de Atividade:\nCaso Expandido 2: Criar Plano de Ação
+
+' Configurações de estilo (mantendo o mesmo padrão visual do anterior)
+skinparam style strictuml
+skinparam activity {
+  BackgroundColor Black
+  FontColor White
+  BorderColor Red
+}
+skinparam ActivityDiamond {
+  BackgroundColor Black
+  FontColor White
+  BorderColor Red
+}
+skinparam swimlane {
+  BorderColor Black
+  BorderThickness 2
+  TitleBackgroundColor DarkOliveGreen
+  TitleFontColor White
+}
+skinparam partition {
+  BackgroundColor PaleTurquoise
+}
+
+' ==========================================
+' DECLARAÇÃO DA RAIA
+' ==========================================
+|Gestor Setorial|
+
+' ==========================================
+' INÍCIO DO FLUXO
+' ==========================================
+start
+
+' Loop de validação de dados
+repeat
+  :Consultar Painel do\ndepartamento;
+repeat while (Dados suficientes?) is ([não])
+-> [sim];
+
+' Ações sequenciais de análise e planejamento
+:Identificar pontos\ncriticos;
+:Desenvolver Planos;
+
+' Loop de validação de publicação
+repeat
+  :Publicar Plano;
+repeat while (Plano publicado?) is ([não])
+-> [sim];
+
+stop
+
+@enduml

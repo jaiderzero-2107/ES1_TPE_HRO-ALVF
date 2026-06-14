@@ -1,0 +1,71 @@
+@startuml
+' Título do diagrama
+title Diagrama de Atividade\nCaso Expandido 1: Planejar Campanha
+
+' Configurações de estilo
+skinparam style strictuml
+skinparam activity {
+  BackgroundColor Black
+  FontColor White
+  BorderColor Red
+}
+skinparam ActivityDiamond {
+  BackgroundColor Black
+  FontColor White
+  BorderColor Red
+}
+skinparam swimlane {
+  BorderColor Black
+  BorderThickness 2
+  TitleBackgroundColor DarkOliveGreen
+  TitleFontColor White
+}
+skinparam partition {
+  BackgroundColor PaleTurquoise
+}
+
+' ==========================================
+' DECLARAÇÃO DAS RAIAS (Garante a ordem visual: Esquerda -> Direita)
+' ==========================================
+|Gestor RH|
+|Diretor Executivo|
+
+' ==========================================
+' INÍCIO DO FLUXO
+' ==========================================
+
+|Diretor Executivo|
+start
+:Solicitude de nova\ncampanha;
+
+|Gestor RH|
+' Loop de validação da data
+repeat
+  :Definir data de inicio\ne fim;
+repeat while (Data valida?) is ([não])
+-> [sim];
+
+' Barra de Sincronização (Divisão de tarefas paralelas)
+fork
+
+  ' Loop de notificação (agora na raia do RH)
+  repeat
+    :Enviar notificação de nova\ncampanha de pesquisa;
+  repeat while (Totalidade dos\ncolaboradores\nrecebeu o aviso?) is ([não])
+  -> [sim];
+
+fork again
+
+  ' Loop de criação de recursos
+  repeat
+    :Criação de\nRecursos;
+  repeat while (Recursos prontos?) is ([não])
+  -> [sim];
+
+' Barra de Sincronização (União das tarefas paralelas)
+end fork
+
+:Inicio da campanha;
+stop
+
+@enduml

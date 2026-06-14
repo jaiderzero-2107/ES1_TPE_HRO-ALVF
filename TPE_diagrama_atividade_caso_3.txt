@@ -1,0 +1,64 @@
+@startuml
+' Título do diagrama
+title Diagrama de Atividade:\nCaso Expandido 3: Responder Pesquisa
+
+' Configurações de estilo
+skinparam style strictuml
+skinparam activity {
+  BackgroundColor Black
+  FontColor White
+  BorderColor Red
+}
+skinparam ActivityDiamond {
+  BackgroundColor Black
+  FontColor White
+  BorderColor Red
+}
+skinparam swimlane {
+  BorderColor Black
+  BorderThickness 2
+  TitleBackgroundColor DarkOliveGreen
+  TitleFontColor White
+}
+
+' ==========================================
+' DECLARAÇÃO DAS RAIAS (Garante a ordem e a cor)
+' ==========================================
+|#PaleTurquoise|Colaborador|
+|#PaleTurquoise|Painel|
+
+' ==========================================
+' INÍCIO DO FLUXO
+' ==========================================
+
+|Colaborador|
+start
+
+:Acessar ao sistema;
+:Selecionar\nCampanha;
+
+if (Campanha vigente?) then ([não])
+  stop
+else ([sim])
+  
+  :Acessar Pesquisa;
+  
+  if (Pesquisa previamente\nrespondida?) then ([sim])
+    stop
+  else ([não])
+    
+    :Responder\npesquisa;
+    :Enviar Pesquisa;
+    
+    ' Desvia para a raia do Painel
+    |Painel|
+    :Atualizar taxa de\nparticipação;
+    
+    ' Retorna para a raia do Colaborador para finalizar
+    |Colaborador|
+    stop
+
+  endif
+endif
+
+@enduml

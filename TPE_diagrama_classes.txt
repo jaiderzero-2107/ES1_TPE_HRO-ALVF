@@ -1,0 +1,114 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide circle
+
+' ==========================================
+' DEFINIÇÃO DAS CLASSES E ATRIBUTOS
+' ==========================================
+
+class Usuario {
+  - nome: string
+  - CPF: numeric
+  - email: string
+  - senha: string
+}
+
+class Suporte {
+  - id_suporte: string
+  - permissão: string
+  - senha_admin: string
+}
+
+class Colaborador {
+  - id_colaborador: string
+}
+
+class "Gestor RH" as GestorRH {
+  - id_rh: string
+  - filial: string
+}
+
+class "Gestor Setorial" as GestorSetorial {
+  - id_gestor: string
+  - departamento: string
+}
+
+class "Diretor Executivo" as DiretorExecutivo {
+  - id_executivo: string
+  - região: string
+}
+
+class Log {
+  - data: timestamp
+  - descrição: string
+  - origem: string
+  - usuario: Usuario
+}
+
+class Recurso {
+  - data_criação: timestamp
+  - tipo: script
+  - validade: date
+}
+
+class Campanha {
+  - data_inicio: timestamp
+  - data_fim: timestamp
+  - detalhes: string
+  - publico: string
+}
+
+class Painel {
+  - descrição: string
+  - area: string
+}
+
+class Plano {
+  - descrição: string
+  - area: string
+  - tempo_estimado: timestamp
+  - observações: string
+}
+
+' ==========================================
+' RELACIONAMENTOS DE HERANÇA
+' ==========================================
+
+Usuario <|-- Suporte
+Usuario <|-- Colaborador
+Usuario <|-- GestorRH
+Usuario <|-- GestorSetorial
+Usuario <|-- DiretorExecutivo
+
+' ==========================================
+' RELACIONAMENTOS E CARDINALIDADES
+' ==========================================
+
+' Ações dos Usuários
+Suporte --> "1..*" Log : acessa
+
+Colaborador --> "1" Recurso : responde
+
+GestorRH --> "1..*" Recurso : desenvolve
+GestorRH --> "1" Campanha : planeja
+GestorRH --> "1" Painel : construi
+
+GestorSetorial --> "1" Painel : consulta
+note on link: Setor filtrado
+GestorSetorial --> "1..*" Plano : cria
+
+DiretorExecutivo --> "1..*" Painel : consulta
+note on link: Visão global
+
+' Agregações com a Campanha (Losango branco)
+Campanha o-- "1..*" Recurso : usa
+Campanha o-- "1..*" Painel : associa
+Campanha o-- "1..*" Plano : organiza
+
+' Associações entre entidades sistêmicas
+Plano --> "1..*" Painel : alimenta
+Recurso --> "1..*" Painel : alimenta
+
+' Associações de Log 
+Campanha --> "1..*" Log: gera
+@enduml
