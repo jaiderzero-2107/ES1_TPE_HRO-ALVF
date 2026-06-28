@@ -1,0 +1,66 @@
+@startuml
+' Título do diagrama
+title Diagrama Sequencia\nCaso Expandido 3: Responder Pesquisa
+
+' Estilização para espelhar o "Dark Mode" do Draw.io original
+skinparam backgroundColor #002b2b
+skinparam defaultFontColor white
+skinparam sequence {
+    ArrowColor white
+    LifeLineBorderColor white
+    LifeLineBackgroundColor white
+    ParticipantBackgroundColor #2b4a22
+    ParticipantBorderColor #86c440
+    ParticipantFontColor white
+    ActorBorderColor white
+    ActorBackgroundColor #002b2b
+    ActorFontColor white
+    GroupBodyBackgroundColor transparent
+    GroupBorderColor white
+    GroupHeaderFontColor white
+}
+
+' Declaração dos participantes (O ator no seu desenho não tem nome, assumimos Colaborador)
+actor "Colaborador" as Colab
+participant ":Sistema" as Sist
+
+' ==========================================
+' FLUXO DE EXECUÇÃO
+' ==========================================
+
+Colab -> Sist : abrirCampanha()
+activate Sist
+
+' Auto-chamada
+Sist -> Sist : verificarCampanha()
+
+' Primeiro bloco: Alternativa (Vigente vs Vencida)
+alt campanha vigente
+    Sist --> Colab : mensagemCampanhaVigente
+else campanha viencida
+    Sist --> Colab : mensagemCampanhaVencida
+    Sist --> Colab : sairCampanha()
+end
+
+Colab -> Sist : abrirPesquisa()
+
+' Auto-chamada
+Sist -> Sist : verificarColaboradorPesquisa()
+
+' Segundo bloco: Opcional / Exceção (Evitar duplicidade)
+opt pesquisa respondida
+    Sist --> Colab : mensagemPesquisaRespondida
+    Sist --> Colab : sairPesquisa()
+end
+
+' Fluxo de submissão
+Sist --> Colab : formularioPesquisa()
+Colab -> Sist : enviarPesquisa()
+
+' Auto-chamada final
+Sist -> Sist : atualizarTaixaParticipacao()
+
+' Destruição da linha de vida
+destroy Sist
+
+@enduml

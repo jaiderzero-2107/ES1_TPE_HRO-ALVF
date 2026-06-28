@@ -1,0 +1,49 @@
+@startuml
+allowmixing
+
+' Título do diagrama
+title Diagrama de Comunicação\nCaso Expandido 2: Criar Plano de Ação
+
+' Estilização Dark Mode
+skinparam backgroundColor #002b2b
+skinparam defaultFontColor white
+skinparam actor {
+    BackgroundColor #002b2b
+    BorderColor white
+    FontColor white
+}
+skinparam object {
+    BackgroundColor #2b4a22
+    BorderColor #86c440
+    FontColor white
+}
+skinparam arrow {
+    Color white
+    FontColor white
+    Thickness 1.5
+}
+
+' Declaração dos nós
+actor "Actor" as Actor
+object ":Painel" as Painel
+object ":Plano" as Plano
+
+' ==========================================
+' MENSAGENS E RELACIONAMENTOS
+' ==========================================
+
+' Eixo Horizontal: Actor <-> Painel
+Actor -right-> Painel : "1: abrirPainel()"
+Painel .left.> Actor : "1.1.1: [volume_dados < limite_minimo] fecharPainel()\n1.2: mostrarPainel()"
+
+' Auto-chamada no Painel (O PlantUML desenhará um loop)
+Painel -up-> Painel : "1.1: verificarVolumeDados()"
+
+' Eixo Diagonal/Vertical: Actor <-> Plano
+Actor -down-> Plano : "2: criarPlanoAcao()\n3: publicarPlanoAcao()"
+Plano .up.> Actor : "2.1: formularioPlanoAcao()"
+
+' Relacionamento estrutural entre as classes
+Painel -- Plano
+
+@enduml

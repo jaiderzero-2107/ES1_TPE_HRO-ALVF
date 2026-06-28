@@ -1,0 +1,45 @@
+@startuml
+allowmixing
+' Título do diagrama
+title Diagrama de Comunicação:\nCaso Expandido 1: Planejar Campanha
+
+' Estilização para espelhar o "Dark Mode" do Draw.io
+skinparam backgroundColor #002b2b
+skinparam defaultFontColor white
+skinparam actor {
+    BackgroundColor #002b2b
+    BorderColor white
+    FontColor white
+}
+skinparam object {
+    BackgroundColor #2b4a22
+    BorderColor #86c440
+    FontColor white
+}
+skinparam arrow {
+    Color white
+    FontColor white
+    Thickness 1.5
+}
+
+' Declaração dos nós (Ator e Objetos)
+actor "Gestor RH" as Gestor
+object ":Campanha" as Campanha
+object ":Recurso" as Recurso
+
+' ==========================================
+' MENSAGENS E RELACIONAMENTOS
+' ==========================================
+
+' Eixo Horizontal: Gestor <-> Campanha
+Gestor -right-> Campanha : "1: criarCampanha()\n2: definirDatas()\n5: postarCampanha()"
+Campanha .left.> Gestor : "1.1: formularioCriarCampanha()\n2.1: validacaoData()"
+
+' Eixo Diagonal/Vertical: Gestor <-> Recurso
+Gestor -down-> Recurso : "3: criarRecursos()\n4: popularRecursos()"
+Recurso .up.> Gestor : "3.1: formularioCriarRecurso()\n4.1: validacaoRecurso()"
+
+' Relacionamento estrutural entre as classes
+Campanha -- Recurso
+
+@enduml

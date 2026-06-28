@@ -1,0 +1,55 @@
+@startuml
+' Título do diagrama
+title Diagrama de Sequencia\nCaso Expandido 2: Criar Plano de Ação
+
+' Estilização para espelhar o "Dark Mode" do Draw.io original
+skinparam backgroundColor #002b2b
+skinparam defaultFontColor white
+skinparam sequence {
+    ArrowColor white
+    LifeLineBorderColor white
+    LifeLineBackgroundColor white
+    ParticipantBackgroundColor #2b4a22
+    ParticipantBorderColor #86c440
+    ParticipantFontColor white
+    ActorBorderColor white
+    ActorBackgroundColor #002b2b
+    ActorFontColor white
+    GroupBodyBackgroundColor transparent
+    GroupBorderColor white
+    GroupHeaderFontColor white
+}
+
+' Declaração dos participantes
+actor "Gestor\nSetorial" as Gestor
+participant ":Sistema" as Sist
+
+' ==========================================
+' FLUXO DE EXECUÇÃO
+' ==========================================
+
+Gestor -> Sist : abrirPainel()
+activate Sist
+
+' Auto-chamada do sistema
+Sist -> Sist : verificarVolumeDados()
+
+' Bloco Opcional/Exceção (Regra de Anonimato)
+opt volume insuficiente
+    Sist --> Gestor : mensagemDadosInsuficentes
+    Sist --> Gestor : fecharPainel()
+end
+
+' Fluxo Principal
+Sist --> Gestor : mostrarPainel()
+
+Gestor -> Sist : criarPlanoAcao()
+Sist --> Gestor : formularioPlanoAcao()
+
+Gestor -> Sist : publicarPlanoAcao()
+Sist --> Gestor : mensagemPlanoPublicado
+
+' Destruição do objeto
+destroy Sist
+
+@enduml

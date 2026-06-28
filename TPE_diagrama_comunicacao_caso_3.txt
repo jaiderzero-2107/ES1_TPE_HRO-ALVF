@@ -1,0 +1,56 @@
+@startuml
+allowmixing
+
+' Título do diagrama
+title Diagrama de Comunicação\nCaso Expandido 3: Responder Pesquisa
+
+' Estilização Dark Mode
+skinparam backgroundColor #002b2b
+skinparam defaultFontColor white
+skinparam actor {
+    BackgroundColor #002b2b
+    BorderColor white
+    FontColor white
+}
+skinparam object {
+    BackgroundColor #2b4a22
+    BorderColor #86c440
+    FontColor white
+}
+skinparam arrow {
+    Color white
+    FontColor white
+    Thickness 1.5
+}
+
+' Declaração dos nós
+actor "Actor" as Actor
+object ":Campanha" as Campanha
+object ":Recurso" as Recurso
+object ":Painel" as Painel
+
+' ==========================================
+' MENSAGENS E RELACIONAMENTOS
+' ==========================================
+
+' Eixo Topo: Actor <-> Campanha
+Actor -right-> Campanha : "1: abrirCampanha()\n3: enviarPesquisa()"
+Campanha .left.> Actor : "1.1.1: [campanha vencida] sairCampanha()"
+
+' Auto-chamada Campanha (Loop no topo)
+Campanha -up-> Campanha : "1.1: verificarCampanha()"
+
+' Eixo Esquerda: Actor <-> Recurso
+Actor -down-> Recurso : "2: abrirPesquisa()"
+Recurso .up.> Actor : "2.1.1:[pesquisa respondida] sairPesquisa()\n2.2: formuarioPesquisa()"
+
+' Auto-chamada Recurso (Loop na esquerda)
+Recurso -left-> Recurso : "2.1: verificarColaboradorPesquisa()"
+
+' Eixo Base: Recurso -> Painel
+Recurso -right-> Painel : "4: atualizarTaixaParticipacao()"
+
+' Eixo Direita: Painel -> Campanha
+Painel -up-> Campanha : "4.1: atualizarTaixaParticipacao()"
+
+@enduml

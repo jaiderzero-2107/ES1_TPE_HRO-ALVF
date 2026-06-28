@@ -1,0 +1,67 @@
+@startuml
+' Título do diagrama
+title Diagrama de Sequencia\nCaso Expandido 1: Planejar Campanha
+
+' Estilização para espelhar o "Dark Mode" do Draw.io original
+skinparam backgroundColor #002b2b
+skinparam defaultFontColor white
+skinparam sequence {
+    ArrowColor white
+    LifeLineBorderColor white
+    LifeLineBackgroundColor white
+    ParticipantBackgroundColor #2b4a22
+    ParticipantBorderColor #86c440
+    ParticipantFontColor white
+    ActorBorderColor white
+    ActorBackgroundColor #002b2b
+    ActorFontColor white
+    GroupBodyBackgroundColor transparent
+    GroupBorderColor white
+    GroupHeaderFontColor white
+}
+
+' Declaração dos participantes
+actor "Gestor\nRH" as RH
+participant ":Sistema" as Sist
+
+' ==========================================
+' FLUXO DE EXECUÇÃO
+' ==========================================
+
+RH -> Sist : criarCampanha()
+activate Sist
+Sist --> RH : formularioCriarCampanha()
+
+RH -> Sist : definirDatas()
+
+' Primeiro bloco condicional (Validação de Datas)
+alt data valida
+    Sist --> RH : mensagemDataValida
+else data invalida
+    Sist --> RH : mensagemDataInvalida
+end
+
+' Auto-chamada do sistema
+Sist -> Sist : enviarNotificacoes()
+
+RH -> Sist : criarRecursos()
+Sist --> RH : formularioRecursos()
+
+RH -> Sist : popularRecursos()
+
+' Segundo bloco condicional (Validação de Recursos)
+alt recursos validos
+    Sist --> RH : mensagemRecursosValidados
+else recursos invalidos
+    Sist --> RH : mensagemRecursosInvalidos
+end
+
+' Finalização e Postagem
+Sist --> RH : mensagemCampanhaCriada
+
+Sist -> Sist : postarCampanha()
+
+' Destruição do objeto (O 'X' no final da linha de vida)
+destroy Sist
+
+@enduml
