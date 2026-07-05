@@ -2,7 +2,7 @@
 allowmixing
 
 ' Título do diagrama
-title Diagrama de Comunicação\nCaso Expandido 3: Responder Pesquisa
+title Diagrama de Comunicação:\nCaso Expandido 3: Responder Pesquisa (Ajustado com GRASP)
 
 ' Estilização Dark Mode
 skinparam backgroundColor #002b2b
@@ -24,33 +24,30 @@ skinparam arrow {
 }
 
 ' Declaração dos nós
-actor "Actor" as Actor
-object ":Campanha" as Campanha
-object ":Recurso" as Recurso
-object ":Painel" as Painel
+actor "Colaborador" as Colab
+object ":Sistema" as Sist
+object "camp: Campanha" as Camp
+object "rec: Recurso" as Rec
+object "painel: Painel" as Painel
 
 ' ==========================================
 ' MENSAGENS E RELACIONAMENTOS
 ' ==========================================
 
-' Eixo Topo: Actor <-> Campanha
-Actor -right-> Campanha : "1: abrirCampanha()\n3: enviarPesquisa()"
-Campanha .left.> Actor : "1.1.1: [campanha vencida] sairCampanha()"
+' Interface fala apenas com o Controlador
+Colab -right-> Sist : "1: abrirCampanha()\n2: abrirPesquisa()\n3: enviarPesquisa()"
+Sist .left.> Colab : "1.1.1: [vencida] msgCampanhaVencida()\n1.1.1a: [vencida] sairCampanha()\n1.2: [vigente] msgCampanhaVigente()\n2.1.1: [respondida] msgPesquisaRespondida()\n2.1.1a: [respondida] sairPesquisa()\n2.2: formularioPesquisa()"
 
-' Auto-chamada Campanha (Loop no topo)
-Campanha -up-> Campanha : "1.1: verificarCampanha()"
+' Auto-chamadas de validação e processamento interno
+Sist -up-> Sist : "2.1: verificarColaboradorPesquisa()\n3.2: atualizarTaixaParticipacao()"
 
-' Eixo Esquerda: Actor <-> Recurso
-Actor -down-> Recurso : "2: abrirPesquisa()"
-Recurso .up.> Actor : "2.1.1:[pesquisa respondida] sairPesquisa()\n2.2: formuarioPesquisa()"
+' Delegação do Controlador para Especialistas e Colaboradores do Domínio (Slide 30)
+Sist -down-> Camp : "1.1: verificarCampanha()"
+Sist -right-> Rec : "3.1: registrarResposta()"
+Sist -left-> Painel : "3.3: incrementarParticipacao()"
 
-' Auto-chamada Recurso (Loop na esquerda)
-Recurso -left-> Recurso : "2.1: verificarColaboradorPesquisa()"
-
-' Eixo Base: Recurso -> Painel
-Recurso -right-> Painel : "4: atualizarTaixaParticipacao()"
-
-' Eixo Direita: Painel -> Campanha
-Painel -up-> Campanha : "4.1: atualizarTaixaParticipacao()"
+' Links estruturais de associação
+Camp -- Rec
+Rec -- Painel
 
 @enduml

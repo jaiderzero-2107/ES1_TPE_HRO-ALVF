@@ -2,7 +2,7 @@
 allowmixing
 
 ' Título do diagrama
-title Diagrama de Comunicação\nCaso Expandido 2: Criar Plano de Ação
+title Diagrama de Comunicação:\nCaso Expandido 2: Criar Plano de Ação
 
 ' Estilização Dark Mode
 skinparam backgroundColor #002b2b
@@ -24,26 +24,27 @@ skinparam arrow {
 }
 
 ' Declaração dos nós
-actor "Actor" as Actor
-object ":Painel" as Painel
-object ":Plano" as Plano
+actor "Gestor Setorial" as Gestor
+object ":Sistema" as Sist
+object "painel: Painel" as Painel
+object "plano: Plano" as Plano
 
 ' ==========================================
 ' MENSAGENS E RELACIONAMENTOS
 ' ==========================================
 
-' Eixo Horizontal: Actor <-> Painel
-Actor -right-> Painel : "1: abrirPainel()"
-Painel .left.> Actor : "1.1.1: [volume_dados < limite_minimo] fecharPainel()\n1.2: mostrarPainel()"
+' Comunicação exclusiva com o Controlador (Slide 74)
+Gestor -right-> Sist : "1: abrirPainel()\n2: criarPlanoAcao()\n3: publicarPlanoAcao()"
+Sist .left.> Gestor : "1.1.1: [volume < limite] fecharPainel()\n1.1.1a: [volume < limite] msgDadosInsuficentes()\n1.2: mostrarPainel()\n2.1: formularioPlanoAcao()\n3.3: msgPlanoPublicado()"
 
-' Auto-chamada no Painel (O PlantUML desenhará um loop)
-Painel -up-> Painel : "1.1: verificarVolumeDados()"
+' Auto-chamada de controle do sistema
+Sist -up-> Sist : "1.1: verificarVolumeDados()"
 
-' Eixo Diagonal/Vertical: Actor <-> Plano
-Actor -down-> Plano : "2: criarPlanoAcao()\n3: publicarPlanoAcao()"
-Plano .up.> Actor : "2.1: formularioPlanoAcao()"
+' Delegação para os Objetos do Domínio
+Sist -down-> Painel : "3.2: associarPlano(plano)"
+Sist -right-> Plano : "3.1: plano:=criar(dados)"
 
-' Relacionamento estrutural entre as classes
+' Link estrutural de domínio
 Painel -- Plano
 
 @enduml

@@ -1,9 +1,10 @@
 @startuml
 allowmixing
+
 ' Título do diagrama
 title Diagrama de Comunicação:\nCaso Expandido 1: Planejar Campanha
 
-' Estilização para espelhar o "Dark Mode" do Draw.io
+' Estilização para espelhar o "Dark Mode"
 skinparam backgroundColor #002b2b
 skinparam defaultFontColor white
 skinparam actor {
@@ -22,24 +23,28 @@ skinparam arrow {
     Thickness 1.5
 }
 
-' Declaração dos nós (Ator e Objetos)
-actor "Gestor RH" as Gestor
-object ":Campanha" as Campanha
-object ":Recurso" as Recurso
+' Declaração dos nós alinhados com o Diagrama de Sequência 1
+actor "Gestor RH" as RH
+object ":Sistema" as Sist
+object "camp: Campanha" as Camp
+object "rec: Recurso" as Rec
 
 ' ==========================================
-' MENSAGENS E RELACIONAMENTOS
+' MENSAGENS E RELACIONAMENTOS (Camada de Controle e Domínio)
 ' ==========================================
 
-' Eixo Horizontal: Gestor <-> Campanha
-Gestor -right-> Campanha : "1: criarCampanha()\n2: definirDatas()\n5: postarCampanha()"
-Campanha .left.> Gestor : "1.1: formularioCriarCampanha()\n2.1: validacaoData()"
+' O Gestor só se comunica com o Controlador (Baixo Acoplamento - Slide 37)
+RH -right-> Sist : "1: criarCampanha()\n2: definirDatas()\n4: criarRecursos()\n5: popularRecursos()"
+Sist .left.> RH : "1.1: formularioCriarCampanha()\n2.2: [valida] msgDataValida()\n2.2a: [invalida] msgDataInvalida()\n4.1: formularioRecursos()\n5.3: [valido] msgRecursosValidados()\n5.3a: [invalido] msgRecursosInvalidos()\n6: msgCampanhaCriada()"
 
-' Eixo Diagonal/Vertical: Gestor <-> Recurso
-Gestor -down-> Recurso : "3: criarRecursos()\n4: popularRecursos()"
-Recurso .up.> Gestor : "3.1: formularioCriarRecurso()\n4.1: validacaoRecurso()"
+' Auto-chamadas do Controlador Fachada (Sistema)
+Sist -up-> Sist : "3: enviarNotificacoes()\n6.1: postarCampanha()"
 
-' Relacionamento estrutural entre as classes
-Campanha -- Recurso
+' Delegação para Especialistas da Informação (Slide 17) e Criadores (Slide 32)
+Sist -down-> Camp : "2.1: camp:=criar(ini, fim)\n5.2: associarRecurso(rec)"
+Sist -right-> Rec : "5.1: rec:=criar(dados)"
+
+' Link estrutural do modelo de domínio
+Camp -right- Rec
 
 @enduml
